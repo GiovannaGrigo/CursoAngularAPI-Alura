@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ContainerComponent } from "../../componentes/container/container.component";
 import { Contato } from '../../componentes/contato/contato';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ContatoService } from '../../services/contato.service';
 
 @Component({
@@ -29,14 +29,23 @@ export class PerfilContatoComponent implements OnInit {
 
   constructor(
     private activatedroute: ActivatedRoute,
-    private contatoService: ContatoService
-  ) {}
+    private contatoService: ContatoService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
-    const id =this.activatedroute.snapshot.paramMap.get('id')
-    if(id) {
+    const id = this.activatedroute.snapshot.paramMap.get('id')
+    if (id) {
       this.contatoService.buscarPorId(parseInt(id)).subscribe((contato) => {
         this.contato = contato
+      })
+    }
+  }
+
+  excluir() {
+    if (this.contato.id) {
+      this.contatoService.excluirContato(this.contato.id).subscribe(() => {
+        this.router.navigateByUrl('/lista-contatos')
       })
     }
   }
