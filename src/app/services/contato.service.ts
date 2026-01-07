@@ -11,7 +11,7 @@ export class ContatoService {
   private readonly API = 'http://localhost:3000/contatos'
 
   constructor(private http: HttpClient) {
-    
+
   }
 
   obterContatos(): Observable<Contato[]> {
@@ -30,5 +30,18 @@ export class ContatoService {
   excluirContato(id: number): Observable<Contato> {
     const url = `${this.API}/${id}`
     return this.http.delete<Contato>(url)
+  }
+
+  editarContato(contato: Contato): Observable<Contato> {
+    const url = `${this.API}/${contato.id}`
+    return this.http.put<Contato>(url, contato)
+  }
+
+  editarOuSalvarContato(contato: Contato): Observable<Contato> {
+    if (contato.id) {
+      return this.editarContato(contato)
+    } else {
+      return this.salvarContato(contato)
+    }
   }
 }
